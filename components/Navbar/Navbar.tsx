@@ -5,10 +5,11 @@ import {
     SignedOut,
     UserButton,
 } from "@clerk/nextjs";
+import styles from "./Navbar.module.css";
 
-export default function Navbar() {
+export default async function Navbar() {
     return (
-        <header className="p-4 border-b">
+        <header className={"border-b " + styles.header}>
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 <h1 className="text-xl font-bold">Fundraising App</h1>
                 <nav>
