@@ -20,7 +20,7 @@ enum OrganizationType {
 }
 
 model Organization {
-  id            Int                @id @default(autoincrement())
+  id            String             @id @default(cuid())
   name          String
   legalName     String             @unique
   type          OrganizationType   @default(UNIVERSITY)
@@ -33,7 +33,7 @@ model Organization {
 
 model Program {
   id                 Int                @id @default(autoincrement())
-  organizationId     Int
+  organizationId     String
   name               String
   image              String
   shortDescription   String  
@@ -50,7 +50,7 @@ model Member {
   id                 String             @id
   roleId             Int
   image              String
-  organizationId     Int
+  organizationId     String
   isBlocked          Boolean            @default(false)
 
   role               Role               @relation(fields: [roleId], references: [id])
@@ -78,12 +78,22 @@ model Donation {
   program            Program            @relation(fields: [programId], references: [id])
 }
 
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELED
+}
+
 model Subscription {
   id                 Int                @id @default(autoincrement())
   memberId           String
   programId          Int           
   typeId             Int
+  amount             Int
+  currency           String
+  status             SubscriptionStatus
   createdAt          DateTime           @default(now())
+  canceledAt         DateTime?         
   
   member             Member             @relation(fields: [memberId], references: [id])
   type               SubscriptionType   @relation(fields: [typeId], references: [id])
