@@ -1,15 +1,17 @@
 type SearchProps = {
-    action: string;
+    action: (formData: FormData) => void | Promise<void>;
     query?: string;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-export default function Search({ action, query }: SearchProps) {
+export default function Search({ action, query, onChange }: SearchProps) {
     return (
         <form action={action}>
             <label className="input my-6 w-full">
                 <input
                     name="search"
                     value={query}
+                    onChange={onChange}
                     type="search"
                     className="grow"
                     placeholder="Search"

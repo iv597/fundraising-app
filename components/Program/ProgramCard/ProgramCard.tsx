@@ -4,7 +4,7 @@ type Props = {
     program: Program;
 };
 
-export default function Search({ program }: Props) {
+export default function ProgramCard({ program }: Props) {
     const { image, name, shortDescription } = program;
     return (
         <div className="card bg-base-100 w-full shadow-sm mb-4">

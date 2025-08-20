@@ -1,18 +1,22 @@
-import Search from "@/components/Search";
+import OrganizationPrograms from "@/components/Organization/OrganizationPrograms";
 import prisma from "@/lib/prisma";
-import ProgramCard from "@/components/Program/ProgramCard";
-import { Program } from "@/generated/prisma";
 
 export default async function OrganizationPage({
     params,
+    searchParams,
 }: {
     params: Promise<{ organizationId: string }>;
+    searchParams: { q?: string };
 }) {
     const { organizationId } = await params;
+    const { q } = await searchParams;
+
     const organization = await prisma.organization.findUnique({
         where: { id: organizationId },
         include: {
-            programs: true, // include all related programs
+            programs: {
+                where: q ? { name: { contains: q, mode: "insensitive" } } : {},
+            },
         },
     });
     return (
@@ -26,14 +30,12 @@ export default async function OrganizationPage({
                 </h1>
             </div>
             <div className="divider"></div>
-            <div className="pt-4">
-                <h2 className="text-center">Fundraiser programs</h2>
-                <Search action={`/${organizationId}`} />
-            </div>
 
-            {organization?.programs.map((program: Program) => (
-                <ProgramCard key={program.id} program={program} />
-            ))}
+            <OrganizationPrograms
+                orgId={organizationId}
+                initialPrograms={organization?.programs || []}
+                initialQuery={q}
+            />
         </>
     );
 }
