@@ -1,6 +1,6 @@
 export default function HomePage() {
     return (
-        <main className="">
+        <main className="max-w-7xl mx-auto p-4">
             <section className="text-center py-12">
                 <h1 className="text-4xl font-bold text-gray-900 mb-4">
                     Welcome to Fundraising App

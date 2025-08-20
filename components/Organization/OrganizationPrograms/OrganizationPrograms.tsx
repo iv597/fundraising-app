@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { searchPrograms } from "@/app/[organizationId]/actions";
 import Search from "@/components/Search";
 import { Program } from "@/generated/prisma";
@@ -20,7 +20,6 @@ export default function OrganizationPrograms({
     const [q, setQ] = useState(initialQuery || "");
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
-    const searchParams = useSearchParams();
 
     const handleSearch = (formData: FormData) => {
         startTransition(async () => {
