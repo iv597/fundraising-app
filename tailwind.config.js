@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const { themes } = require("daisyui/src/theming/themes");
+
 module.exports = {
     content: [
         "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -6,7 +8,21 @@ module.exports = {
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                sans: ["Open Sans", "sans-serif"],
+            },
+        },
     },
-    plugins: [],
+    daisyui: {
+        themes: [
+            {
+                mytheme: {
+                    ...themes["light"],
+                    fontFamily: "Open Sans, sans-serif",
+                },
+            },
+        ],
+    },
+    plugins: [require("daisyui")],
 };

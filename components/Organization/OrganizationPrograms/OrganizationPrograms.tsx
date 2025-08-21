@@ -6,6 +6,7 @@ import { searchPrograms } from "@/app/[organizationId]/actions";
 import Search from "@/components/Search";
 import { Program } from "@/generated/prisma";
 import ProgramCard from "@/components/Program/ProgramCard";
+import OrganizationProgramsSkeleton from "./OrganizationProgramsSkeleton";
 
 export default function OrganizationPrograms({
     orgId,
@@ -47,7 +48,7 @@ export default function OrganizationPrograms({
             </div>
 
             {isPending ? (
-                <div>Loading...</div>
+                <OrganizationProgramsSkeleton />
             ) : (
                 programs.map((program: Program) => (
                     <ProgramCard key={program.id} program={program} />

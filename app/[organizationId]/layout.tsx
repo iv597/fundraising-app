@@ -8,7 +8,9 @@ export default function OrganizationLayout({
     return (
         <>
             <Navbar />
-            <main className="max-w-7xl mx-auto p-4">{children}</main>
+            <main className="max-w-7xl mx-auto px-5 py-6 " data-theme="mytheme">
+                {children}
+            </main>
         </>
     );
 }
