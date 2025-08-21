@@ -1,4 +1,5 @@
 import BackButtonClient from "@/components/BackButtonClient/BackButtonClient";
+import PlaidLinkButton from "@/components/Plaid/PlaidLinkButton";
 import ReadMoreTextComponent from "@/components/ReadMoreTextComponent";
 import prisma from "@/lib/prisma";
 
@@ -57,6 +58,8 @@ export default async function ProgramPage({
                         <input type="radio" name="radio-1" className="radio" />
                     </div>
                 </div>
+
+                <PlaidLinkButton />
             </form>
         </>
     );

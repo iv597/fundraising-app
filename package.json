@@ -14,8 +14,10 @@
         "@tailwindcss/typography": "^0.5.16",
         "daisyui": "^5.0.50",
         "next": "15.4.6",
+        "plaid": "^38.0.0",
         "react": "^19",
         "react-dom": "^19",
+        "react-plaid-link": "^4.1.1",
         "svix": "^1.73.0"
     },
     "devDependencies": {
