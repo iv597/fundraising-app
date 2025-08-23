@@ -1,23 +1,18 @@
 type Props = {
     isRecurring: boolean;
-    frequency: string;
+    frequency: number;
+    options: { id: number; name: string }[];
     onRecurringChange: (isRecurring: boolean) => void;
-    onFrequencyChange: (frequency: string) => void;
+    onFrequencyChange: (frequency: number) => void;
 };
 
 export default function RecurringOptions({
     isRecurring,
     frequency,
+    options,
     onRecurringChange,
     onFrequencyChange,
 }: Props) {
-    const frequencies = [
-        { id: "weekly", label: "Weekly" },
-        { id: "monthly", label: "Monthly" },
-        { id: "quarterly", label: "Quarterly" },
-        { id: "annually", label: "Annually" },
-    ];
-
     return (
         <div className="space-y-4">
             <h3 className="font-semibold text-gray-900">
@@ -51,18 +46,18 @@ export default function RecurringOptions({
                         Choose frequency
                     </label>
                     <div className="grid grid-cols-2 gap-3">
-                        {frequencies.map((freq) => (
+                        {options.map((option) => (
                             <button
-                                key={freq.id}
+                                key={option.id.toString()}
                                 type="button"
-                                onClick={() => onFrequencyChange(freq.id)}
+                                onClick={() => onFrequencyChange(option.id)}
                                 className={`btn btn-outline ${
-                                    frequency === freq.id
+                                    frequency === option.id
                                         ? "btn-primary"
                                         : "btn-ghost"
                                 } border-gray-300 hover:border-primary`}
                             >
-                                {freq.label}
+                                {option.name}
                             </button>
                         ))}
                     </div>

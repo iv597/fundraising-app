@@ -13,6 +13,8 @@ export default async function ProgramPage({
     const program = await prisma.program.findUnique({
         where: { id: parseInt(programId) },
     });
+
+    const frequencies = await prisma.subscriptionType.findMany({});
     return (
         <>
             <BackButtonClient />
@@ -30,7 +32,7 @@ export default async function ProgramPage({
             <p className="text-gray-400">
                 Your support will significantly help this fundraiser.
             </p>
-            <DonationForm />
+            <DonationForm frequencies={frequencies} />
         </>
     );
 }

@@ -44,7 +44,7 @@ export default function BillingAddress({ formData, onInputChange }: Props) {
                         onChange={(e) =>
                             onInputChange("country", e.target.value)
                         }
-                        className="select select-bordered"
+                        className="select select-bordered w-full"
                     >
                         <option>United States</option>
                         <option>Canada</option>
@@ -57,7 +57,7 @@ export default function BillingAddress({ formData, onInputChange }: Props) {
                         placeholder="ZIP"
                         value={formData.zip}
                         onChange={(e) => onInputChange("zip", e.target.value)}
-                        className="input input-bordered"
+                        className="input input-bordered w-full"
                     />
                 </div>
 
@@ -67,7 +67,7 @@ export default function BillingAddress({ formData, onInputChange }: Props) {
                         placeholder="City"
                         value={formData.city}
                         onChange={(e) => onInputChange("city", e.target.value)}
-                        className="input input-bordered"
+                        className="input input-bordered w-full"
                     />
 
                     <input
@@ -75,7 +75,7 @@ export default function BillingAddress({ formData, onInputChange }: Props) {
                         placeholder="State"
                         value={formData.state}
                         onChange={(e) => onInputChange("state", e.target.value)}
-                        className="input input-bordered"
+                        className="input input-bordered w-full"
                     />
                 </div>
             </div>

@@ -42,14 +42,14 @@ export default function PaymentDetails({ formData, onInputChange }: Props) {
                         onChange={(e) =>
                             onInputChange("expiry", e.target.value)
                         }
-                        className="input input-bordered"
+                        className="input input-bordered w-full"
                     />
                     <input
                         type="text"
                         placeholder="CCV"
                         value={formData.cvv}
                         onChange={(e) => onInputChange("cvv", e.target.value)}
-                        className="input input-bordered"
+                        className="input input-bordered w-full"
                     />
                 </div>
             </div>

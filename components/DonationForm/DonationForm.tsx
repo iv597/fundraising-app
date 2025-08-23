@@ -7,15 +7,22 @@ import PaymentMethodSelection from "./PaymentMethodSelection";
 import PaymentDetails from "./PaymentDetails";
 import BillingAddress from "./BillingAddress";
 import RecurringOptions from "./RecurringOptions";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { createDonation } from "@/app/[organizationId]/programs/[programId]/actions";
+import { useParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
-export default function DonationForm() {
+type Props = {
+    frequencies: { id: number; name: string }[];
+};
+
+export default function DonationForm({ frequencies }: Props) {
     const [selectedOption, setSelectedOption] = useState<string>("manual");
     const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
     const [customAmount, setCustomAmount] = useState<string>("");
     const [paymentMethod, setPaymentMethod] = useState<string>("card");
     const [isRecurring, setIsRecurring] = useState<boolean>(false);
-    const [frequency, setFrequency] = useState<string>("monthly");
+    const [frequency, setFrequency] = useState<number>(2);
     const [formData, setFormData] = useState({
         cardName: "",
         cardNumber: "",
@@ -28,6 +35,15 @@ export default function DonationForm() {
         state: "",
         zip: "",
     });
+
+    const [isPending, startTransition] = useTransition();
+    const params = useParams();
+    const { userId } = useAuth();
+
+    // Get programId from URL params
+    const programId = params?.programId
+        ? parseInt(params.programId as string)
+        : 0;
 
     const handleAmountSelect = (amount: number) => {
         setSelectedAmount(amount);
@@ -48,8 +64,70 @@ export default function DonationForm() {
         return selectedAmount || 0;
     };
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!userId) {
+            alert("Please log in to make a donation.");
+            return;
+        }
+
+        if (!programId) {
+            alert("Program not found.");
+            return;
+        }
+
+        const amountValue = getSelectedAmountValue();
+        if (amountValue <= 0) {
+            alert("Please select a valid amount.");
+            return;
+        }
+
+        startTransition(() => {
+            createDonation({
+                memberId: userId,
+                programId: programId,
+                amount: amountValue,
+                currency: "USD",
+                paymentMethod,
+                isRecurring,
+                frequency: isRecurring ? frequency : undefined,
+                cardName: formData.cardName,
+                cardNumber: formData.cardNumber,
+                expiry: formData.expiry,
+                cvv: formData.cvv,
+                addressLine1: formData.addressLine1,
+                addressLine2: formData.addressLine2,
+                country: formData.country,
+                city: formData.city,
+                state: formData.state,
+                zip: formData.zip,
+            })
+                .then((result) => {
+                    if (result.success) {
+                        const type =
+                            result.data?.type === "subscription"
+                                ? "Subscription"
+                                : "Donation";
+                        alert(
+                            `${type} created successfully! ID: ${result.data?.id}`
+                        );
+
+                        // Reset form
+                        // TODO: Redirect to thank you page
+                    } else {
+                        alert(`Error: ${result.error}`);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error creating donation:", error);
+                    alert("An unexpected error occurred. Please try again.");
+                });
+        });
+    };
+
     return (
-        <div className="max-w-md mx-auto py-6 space-y-6">
+        <div className="mx-auto py-6 space-y-6">
             <DonationTypeSelection
                 selectedOption={selectedOption}
                 onOptionChange={setSelectedOption}
@@ -58,7 +136,7 @@ export default function DonationForm() {
             {selectedOption === "plaid" && <PlaidLinkButton />}
 
             {selectedOption === "manual" && (
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <AmountSelection
                         selectedAmount={selectedAmount}
                         customAmount={customAmount}
@@ -86,6 +164,7 @@ export default function DonationForm() {
                     <RecurringOptions
                         isRecurring={isRecurring}
                         frequency={frequency}
+                        options={frequencies}
                         onRecurringChange={setIsRecurring}
                         onFrequencyChange={setFrequency}
                     />
@@ -122,9 +201,12 @@ export default function DonationForm() {
 
                         <button
                             type="submit"
+                            disabled={isPending || !userId}
                             className="btn btn-primary w-full"
                         >
-                            Donate ${getSelectedAmountValue()}
+                            {isPending
+                                ? "Processing..."
+                                : `Donate $${getSelectedAmountValue()}`}
                         </button>
                     </div>
                 </form>
