@@ -32,7 +32,7 @@ export default async function ProgramPage({
             <p className="text-gray-400">
                 Your support will significantly help this fundraiser.
             </p>
-            <DonationForm frequencies={frequencies} />
+            <DonationForm frequencies={frequencies} program={program} />
         </>
     );
 }

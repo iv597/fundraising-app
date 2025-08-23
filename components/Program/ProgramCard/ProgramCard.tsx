@@ -11,10 +11,7 @@ export default function ProgramCard({ program }: Props) {
         <div className="card bg-base-100 w-full shadow-sm mb-4">
             <Link href={`${organizationId}/programs/${id}`}>
                 <figure>
-                    <img
-                        src={"https://placehold.co/460x192"}
-                        alt="program_image"
-                    />
+                    <img src={image} alt={shortDescription} />
                 </figure>
             </Link>
             <div className="card-body">

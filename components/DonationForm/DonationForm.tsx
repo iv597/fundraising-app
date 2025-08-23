@@ -9,14 +9,18 @@ import BillingAddress from "./BillingAddress";
 import RecurringOptions from "./RecurringOptions";
 import { useState, useTransition } from "react";
 import { createDonation } from "@/app/[organizationId]/programs/[programId]/actions";
-import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import { Program } from "@/generated/prisma";
+import ProgramThankYou from "../Program/ProgramThankYou";
 
 type Props = {
     frequencies: { id: number; name: string }[];
+    program: Program | null;
 };
 
-export default function DonationForm({ frequencies }: Props) {
+export default function DonationForm({ frequencies, program }: Props) {
+    const [showThankYou, setShowThankYou] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<string>("manual");
     const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
     const [customAmount, setCustomAmount] = useState<string>("");
@@ -36,14 +40,9 @@ export default function DonationForm({ frequencies }: Props) {
         zip: "",
     });
 
+    const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const params = useParams();
     const { userId } = useAuth();
-
-    // Get programId from URL params
-    const programId = params?.programId
-        ? parseInt(params.programId as string)
-        : 0;
 
     const handleAmountSelect = (amount: number) => {
         setSelectedAmount(amount);
@@ -72,7 +71,7 @@ export default function DonationForm({ frequencies }: Props) {
             return;
         }
 
-        if (!programId) {
+        if (!program) {
             alert("Program not found.");
             return;
         }
@@ -86,7 +85,7 @@ export default function DonationForm({ frequencies }: Props) {
         startTransition(() => {
             createDonation({
                 memberId: userId,
-                programId: programId,
+                programId: program.id,
                 amount: amountValue,
                 currency: "USD",
                 paymentMethod,
@@ -109,12 +108,8 @@ export default function DonationForm({ frequencies }: Props) {
                             result.data?.type === "subscription"
                                 ? "Subscription"
                                 : "Donation";
-                        alert(
-                            `${type} created successfully! ID: ${result.data?.id}`
-                        );
-
-                        // Reset form
-                        // TODO: Redirect to thank you page
+                        // Show thank you popup
+                        setShowThankYou(true);
                     } else {
                         alert(`Error: ${result.error}`);
                     }
@@ -128,6 +123,13 @@ export default function DonationForm({ frequencies }: Props) {
 
     return (
         <div className="mx-auto py-6 space-y-6">
+            {program && (
+                <ProgramThankYou
+                    program={program}
+                    isOpen={showThankYou}
+                    onClose={() => router.push("/dashboard")}
+                />
+            )}
             <DonationTypeSelection
                 selectedOption={selectedOption}
                 onOptionChange={setSelectedOption}
