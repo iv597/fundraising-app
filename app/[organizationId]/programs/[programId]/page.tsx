@@ -1,5 +1,5 @@
 import BackButtonClient from "@/components/BackButtonClient/BackButtonClient";
-import PlaidLinkButton from "@/components/Plaid/PlaidLinkButton";
+import DonationForm from "@/components/DonationForm";
 import ReadMoreTextComponent from "@/components/ReadMoreTextComponent";
 import prisma from "@/lib/prisma";
 
@@ -28,39 +28,7 @@ export default async function ProgramPage({
             <p className="text-gray-400">
                 Your support will significantly help this fundraiser.
             </p>
-            {/* Mozda ovo treba zasebno kao komponente da budu */}
-            <form className="mt-4">
-                <div className="card card-border border-gray-300 bg-base-100 w-full">
-                    <div className="card-body flex flex-row items-center justify-between">
-                        <div>
-                            <p className="font-medium">Standard Donation</p>
-                            <p>One time or monthly donation.</p>
-                        </div>
-                        <input
-                            type="radio"
-                            name="radio-1"
-                            className="radio"
-                            defaultChecked
-                        />
-                    </div>
-                </div>
-                <div className="card card-border border-gray-300 bg-base-100 w-full mt-2">
-                    <div className="card-body flex flex-row items-center justify-between">
-                        <div>
-                            <p className="font-medium">
-                                Round Up Spare Change Donation
-                            </p>
-                            <p>
-                                Roundup your purchases to the next dollar and
-                                give your spare weekly.
-                            </p>
-                        </div>
-                        <input type="radio" name="radio-1" className="radio" />
-                    </div>
-                </div>
-
-                <PlaidLinkButton />
-            </form>
+            <DonationForm />
         </>
     );
 }
