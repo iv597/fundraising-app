@@ -24,7 +24,9 @@ export default async function ProgramPage({
                     initialLines={4}
                 />
             )}
-            <h2 className="text-gray-600">How would you like to support?</h2>
+            <h2 className="text-gray-600 pt-6">
+                How would you like to support?
+            </h2>
             <p className="text-gray-400">
                 Your support will significantly help this fundraiser.
             </p>
