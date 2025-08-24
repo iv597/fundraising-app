@@ -126,12 +126,24 @@ export async function createDonation(
         }
 
         // Create one-time donation
+
+        const amountCents = Math.round(data.amount * 100); // Convert to cents
+
         const donation = await prisma.donation.create({
             data: {
                 memberId: data.memberId,
                 programId: data.programId,
-                amount: Math.round(data.amount * 100), // Convert to cents
+                amount: amountCents,
                 currency: data.currency,
+            },
+        });
+
+        await prisma.member.update({
+            where: { id: data.memberId },
+            data: {
+                donationsTotalAmount: {
+                    increment: amountCents,
+                },
             },
         });
 

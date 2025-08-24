@@ -15,10 +15,17 @@ export default async function ProgramPage({
     });
 
     const frequencies = await prisma.subscriptionType.findMany({});
+    const category = program?.categoryId
+        ? await prisma.programCategory.findFirst({
+              where: { id: program.categoryId },
+          })
+        : null;
+
     return (
         <>
             <BackButtonClient />
             <h1 className="flex gap-4 mt-6">{program?.name}</h1>
+            {category && <p>{category.name}</p>}
             <div className="mt-6">{program?.shortDescription}</div>
             {program?.description && (
                 <ReadMoreTextComponent

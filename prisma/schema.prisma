@@ -39,24 +39,34 @@ model Program {
   shortDescription   String  
   description        String             @db.Text
   slug               String
+  categoryId         Int?
   recommendedAmounts Json?
 
   organization       Organization      @relation(fields: [organizationId], references: [id])
   donations          Donation[]
   subscriptions      Subscription[]
+  category           ProgramCategory?   @relation(fields: [categoryId], references: [id])
+}
+
+model ProgramCategory {
+  id        Int       @id @default(autoincrement())
+  name      String    
+
+  programs  Program[]
 }
 
 model Member {
-  id                 String             @id
-  roleId             Int
-  image              String
-  organizationId     String
-  isBlocked          Boolean            @default(false)
+  id                    String             @id
+  roleId                Int
+  image                 String
+  organizationId        String
+  isBlocked             Boolean            @default(false)
+  donationsTotalAmount  Int                @default(0)
 
-  role               Role               @relation(fields: [roleId], references: [id])
-  organization       Organization       @relation(fields: [organizationId], references: [id])
-  donations          Donation[]
-  subscriptions      Subscription[]
+  role                  Role               @relation(fields: [roleId], references: [id])
+  organization          Organization       @relation(fields: [organizationId], references: [id])
+  donations             Donation[]
+  subscriptions         Subscription[]
 }
 
 
