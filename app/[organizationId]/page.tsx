@@ -16,6 +16,9 @@ export default async function OrganizationPage({
         include: {
             programs: {
                 where: q ? { name: { contains: q, mode: "insensitive" } } : {},
+                include: {
+                    category: true,
+                },
             },
         },
     });

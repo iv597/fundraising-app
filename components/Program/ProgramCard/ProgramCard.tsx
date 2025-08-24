@@ -1,20 +1,17 @@
-import { Program } from "@/generated/prisma";
+import { Prisma } from "@/generated/prisma";
 import Link from "next/link";
-import prisma from "@/lib/prisma";
 
 type Props = {
-    program: Program;
+    program: Prisma.ProgramGetPayload<{
+        include: {
+            category: true;
+        };
+    }>;
 };
 
-export default async function ProgramCard({ program }: Props) {
-    const { image, name, id, shortDescription, organizationId, categoryId } =
+export default function ProgramCard({ program }: Props) {
+    const { image, name, id, shortDescription, organizationId, category } =
         program;
-
-    const category = categoryId
-        ? await prisma.programCategory.findFirst({
-              where: { id: categoryId },
-          })
-        : null;
 
     return (
         <div className="card bg-base-100 w-full shadow-sm mb-4">

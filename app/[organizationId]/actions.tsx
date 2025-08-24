@@ -8,5 +8,8 @@ export async function searchPrograms(orgId: string, query: string) {
             organizationId: orgId,
             name: { contains: query, mode: "insensitive" },
         },
+        include: {
+            category: true,
+        },
     });
 }

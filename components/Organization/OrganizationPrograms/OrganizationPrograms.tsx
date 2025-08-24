@@ -4,19 +4,27 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { searchPrograms } from "@/app/[organizationId]/actions";
 import Search from "@/components/Search";
-import { Program } from "@/generated/prisma";
+import { Prisma, Program } from "@/generated/prisma";
 import ProgramCard from "@/components/Program/ProgramCard";
 import OrganizationProgramsSkeleton from "./OrganizationProgramsSkeleton";
+
+type ProgramWithCategory = Prisma.ProgramGetPayload<{
+    include: {
+        category: true;
+    };
+}>;
+
+type Props = {
+    orgId: string;
+    initialPrograms: ProgramWithCategory[];
+    initialQuery?: string;
+};
 
 export default function OrganizationPrograms({
     orgId,
     initialPrograms,
     initialQuery,
-}: {
-    orgId: string;
-    initialPrograms: any[];
-    initialQuery?: string;
-}) {
+}: Props) {
     const [programs, setPrograms] = useState(initialPrograms);
     const [q, setQ] = useState(initialQuery || "");
     const [isPending, startTransition] = useTransition();
@@ -50,7 +58,7 @@ export default function OrganizationPrograms({
             {isPending ? (
                 <OrganizationProgramsSkeleton />
             ) : (
-                programs.map((program: Program) => (
+                programs.map((program: ProgramWithCategory) => (
                     <ProgramCard key={program.id} program={program} />
                 ))
             )}
