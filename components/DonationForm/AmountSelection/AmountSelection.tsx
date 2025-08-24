@@ -1,8 +1,11 @@
+import { Program } from "@/generated/prisma";
+
 type Props = {
     selectedAmount: number | null;
     customAmount: string;
     onAmountSelect: (amount: number) => void;
     onCustomAmountChange: (value: string) => void;
+    program: Program | null;
 };
 
 export default function AmountSelection({
@@ -10,8 +13,14 @@ export default function AmountSelection({
     customAmount,
     onAmountSelect,
     onCustomAmountChange,
+    program,
 }: Props) {
-    const presetAmounts = [150, 125, 100, 75, 50, 50];
+    const presetAmounts = [150, 125, 100, 75, 50, 25];
+
+    let recommendedAmounts: number[] | undefined =
+        program?.recommendedAmounts as number[] | undefined;
+
+    recommendedAmounts = recommendedAmounts || presetAmounts;
 
     return (
         <div className="space-y-4">
@@ -22,7 +31,7 @@ export default function AmountSelection({
             </p>
 
             <div className="grid grid-cols-3 gap-3">
-                {presetAmounts.map((amount, index) => (
+                {recommendedAmounts.map((amount, index) => (
                     <button
                         key={index}
                         type="button"

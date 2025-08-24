@@ -144,6 +144,7 @@ export default function DonationForm({ frequencies, program }: Props) {
                         customAmount={customAmount}
                         onAmountSelect={handleAmountSelect}
                         onCustomAmountChange={handleCustomAmountChange}
+                        program={program}
                     />
 
                     <PaymentMethodSelection
